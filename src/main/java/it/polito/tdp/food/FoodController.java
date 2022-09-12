@@ -6,6 +6,8 @@ package it.polito.tdp.food;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import it.polito.tdp.food.model.Adiacenza;
 import it.polito.tdp.food.model.Model;
 import it.polito.tdp.food.model.Portion;
 import javafx.event.ActionEvent;
@@ -41,7 +43,7 @@ public class FoodController {
     private Button btnCammino; // Value injected by FXMLLoader
 
     @FXML // fx:id="boxPorzioni"
-    private ComboBox<String> boxPorzioni; // Value injected by FXMLLoader
+    private ComboBox<Portion> boxPorzioni; // Value injected by FXMLLoader
 
     @FXML // fx:id="txtResult"
     private TextArea txtResult; // Value injected by FXMLLoader
@@ -50,12 +52,34 @@ public class FoodController {
     void doCammino(ActionEvent event) {
     	txtResult.clear();
     	txtResult.appendText("Cerco cammino peso massimo...");
+    	
+    	int n;
+    	try {
+    		n=Integer.parseInt(this.txtPassi.getText());
+    		txtResult.appendText(model.calcolaPercorso(this.boxPorzioni.getValue(), n).toString());
+    		
+    	}catch(NumberFormatException e) {
+    		e.printStackTrace();
+    	}
     }
 
     @FXML
     void doCorrelate(ActionEvent event) {
     	txtResult.clear();
-    	txtResult.appendText("Cerco porzioni correlate...");
+    	Portion p= this.boxPorzioni.getValue();
+    	
+    	if(p!=null) {
+    		txtResult.appendText("Porzioni correlate a: "+p);
+    	for(Adiacenza a: model.getVicini(p)) {
+    		txtResult.appendText(a+"\n");
+    	}
+    	}
+    		
+    		
+    	else {
+    		txtResult.appendText("Selezionare un tipo di porzione" );
+    	}
+    	
     	
     }
 
@@ -68,6 +92,7 @@ public class FoodController {
     	try {
     		n=Integer.parseInt(this.txtCalorie.getText());
     			txtResult.appendText(model.creaGrafo(n));
+    	    	this.boxPorzioni.getItems().addAll(model.getVertici());
     		
     	}catch(NumberFormatException e) {
     		e.printStackTrace();
@@ -88,6 +113,5 @@ public class FoodController {
     }
     
     public void setModel(Model model) {
-    	this.model = model;
-    	this.boxPorzioni.getItems().addAll(model.getPortionN());   }
+    	this.model = model;   }
 }

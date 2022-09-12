@@ -109,7 +109,7 @@ public class FoodDao {
 	
 	public List<Portion> listVertici(int n, Map<String, Portion> idMap){
 		String sql = "SELECT DISTINCT * "
-				+ "FROM `portion` "
+				+ "FROM porzione "
 				+ "WHERE calories<? "
 				+ "GROUP BY portion_display_name " ;
 		try {
@@ -149,7 +149,7 @@ public class FoodDao {
 	
 	public List<Adiacenza> listArchi(Map<String, Portion> idMap){
 		String sql = "SELECT  p1.portion_display_name, p2.portion_display_name, COUNT(distinct(p1.food_code)) AS pe1 "
-				+ "FROM `portion` p1,`portion` p2 "
+				+ "FROM porzione p1, porzione p2 "
 				+ "WHERE p1.portion_id<>p2.portion_id "
 				+ "AND P1.food_code=P2.food_code "
 				+ "GROUP BY p1.portion_display_name, p2.portion_display_name " ;
